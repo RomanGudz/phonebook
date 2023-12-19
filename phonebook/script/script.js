@@ -196,9 +196,12 @@ const data = [
     const phoneLink = document.createElement('a');
     phoneLink.href = `tel:${phone}`;
     phoneLink.textContent = phone;
-    tr.phoneLink = phoneLink
+    tr.phoneLink = phoneLink;
     tdPhone.append(phoneLink);
-    tr.append(tdDel, tdName, tdSurname, tdPhone);
+    const buttonEdit = document.createElement('button');
+    buttonEdit.classList.add('btn', 'btn-primary');
+    buttonEdit.textContent = 'Изменить';
+    tr.append(tdDel, tdName, tdSurname, tdPhone, buttonEdit);
 
     return tr;
   };
