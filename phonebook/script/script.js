@@ -228,7 +228,8 @@ const data = [
   const init = (selectorApp, title) => {
     const app = document.querySelector(selectorApp);
     const phoneBook = renderPhoneBook(app, title);
-    const { list,
+    const {
+      list,
       logo,
       btnAdd,
       formOverlay,
@@ -260,6 +261,21 @@ const data = [
       const target = e.target;
       if (target.closest('.del-icon')) {
         target.closest('.contact').remove();
+      }
+    });
+    app.addEventListener('click', e => {
+      const target = e.target;
+      const nameAndSurnameSelect = app.querySelectorAll('th');
+      const rows = Array.from(list.querySelectorAll('tr'));
+      if (target === nameAndSurnameSelect[1]) {
+        console.log('target: ', target);
+        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[1].innerHTML >
+          rowB.cells[1].innerHTML ? 1 : -1))));
+      }
+      if (target === nameAndSurnameSelect[2]) {
+        console.log('target: ', target);
+        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[2].innerHTML >
+          rowB.cells[2].innerHTML ? 1 : -1))));
       }
     });
   };
