@@ -225,6 +225,39 @@ const data = [
     });
   };
 
+  const sortTable = (columnName, list, app) => {
+    const nameAndSurnameSelect = app.querySelectorAll('th');
+    console.log('nameAndSurnameSelect: ', typeof columnName.textContent);
+    const rows = Array.from(list.querySelectorAll('tr'));
+    if (columnName.dataset.sortRow === 'abs') {
+      if (columnName === nameAndSurnameSelect[1]) {
+        console.log('target: ', columnName);
+        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[1].innerHTML >
+          rowB.cells[1].innerHTML ? -1 : 1))));
+        columnName.dataset.sortRow = 'desc';
+      }
+      if (columnName === nameAndSurnameSelect[2]) {
+        console.log('target: ', columnName);
+        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[2].innerHTML >
+          rowB.cells[2].innerHTML ? -1 : 1))));
+        columnName.dataset.sortRow = 'desc';
+      }
+    } else {
+      if (columnName === nameAndSurnameSelect[1]) {
+        console.log('target: ', columnName);
+        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[1].innerHTML >
+          rowB.cells[1].innerHTML ? 1 : -1))));
+        columnName.dataset.sortRow = 'abs';
+      }
+      if (columnName === nameAndSurnameSelect[2]) {
+        console.log('target: ', columnName);
+        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[2].innerHTML >
+          rowB.cells[2].innerHTML ? 1 : -1))));
+        columnName.dataset.sortRow = 'abs';
+      }
+    }
+  };
+
   const init = (selectorApp, title) => {
     const app = document.querySelector(selectorApp);
     const phoneBook = renderPhoneBook(app, title);
@@ -265,18 +298,7 @@ const data = [
     });
     app.addEventListener('click', e => {
       const target = e.target;
-      const nameAndSurnameSelect = app.querySelectorAll('th');
-      const rows = Array.from(list.querySelectorAll('tr'));
-      if (target === nameAndSurnameSelect[1]) {
-        console.log('target: ', target);
-        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[1].innerHTML >
-          rowB.cells[1].innerHTML ? 1 : -1))));
-      }
-      if (target === nameAndSurnameSelect[2]) {
-        console.log('target: ', target);
-        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[2].innerHTML >
-          rowB.cells[2].innerHTML ? 1 : -1))));
-      }
+      sortTable(target, list, app);
     });
   };
 
