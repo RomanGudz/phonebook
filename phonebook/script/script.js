@@ -1,31 +1,47 @@
 'use strict';
 
-const data = [
-  {
-    name: 'Иван',
-    surname: 'Петров',
-    phone: '+79514545454',
-  },
-  {
-    name: 'Игорь',
-    surname: 'Семёнов',
-    phone: '+79999999999',
-  },
-  {
-    name: 'Семён',
-    surname: 'Иванов',
-    phone: '+79800252525',
-  },
-  {
-    name: 'Мария',
-    surname: 'Попова',
-    phone: '+79876543210',
-  },
-];
+// const data = [
+//   {
+//     name: 'Иван',
+//     surname: 'Петров',
+//     phone: '+79514545454',
+//   },
+//   {
+//     name: 'Игорь',
+//     surname: 'Семёнов',
+//     phone: '+79999999999',
+//   },
+//   {
+//     name: 'Семён',
+//     surname: 'Иванов',
+//     phone: '+79800252525',
+//   },
+//   {
+//     name: 'Мария',
+//     surname: 'Попова',
+//     phone: '+79876543210',
+//   },
+// ];
 {
-  const addContact = (contact) => {
-    data.push(contact);
+  const getStorageContacts = (contacts) => {
+    const data = localStorage.getItem(contacts);
+    if (data === 'undefined') {
+      return [];
+    } else {
+      return JSON.parse(data);
+    }
   };
+  const setStorageContact = (obj = null, data) => {
+    data.push(obj);
+    localStorage.setItem('contacts', JSON.stringify(data));
+  };
+
+  const removeStorageContact = (phone) => {
+    let data = getStorageContacts('contacts');
+    data = data.filter(item => item.phone !== phone);
+    localStorage.setItem('contacts', JSON.stringify(data));
+  };
+
   const createContainer = () => {
     const container = document.createElement('div');
     container.classList.add('container');
@@ -211,8 +227,8 @@ const data = [
     return tr;
   };
 
-  const renderContacts = (elem, data) => {
-    const allRow = data.map(createRow);
+  const renderContacts = (elem) => {
+    const allRow = getStorageContacts('contacts').map(createRow);
     elem.append(...allRow);
     return allRow;
   };
@@ -232,30 +248,32 @@ const data = [
     const nameAndSurnameSelect = app.querySelectorAll('th');
     console.log('nameAndSurnameSelect: ', typeof columnName.textContent);
     const rows = Array.from(list.querySelectorAll('tr'));
+    const columnIndex = Array.from(nameAndSurnameSelect).indexOf(columnName);
+
     if (columnName.dataset.sortRow === 'abs') {
       if (columnName === nameAndSurnameSelect[1]) {
         console.log('target: ', columnName);
-        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[1].innerHTML >
-          rowB.cells[1].innerHTML ? -1 : 1))));
+        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[columnIndex].innerHTML >
+          rowB.cells[columnIndex].innerHTML ? -1 : 1))));
         columnName.dataset.sortRow = 'desc';
       }
       if (columnName === nameAndSurnameSelect[2]) {
         console.log('target: ', columnName);
-        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[2].innerHTML >
-          rowB.cells[2].innerHTML ? -1 : 1))));
+        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[columnIndex].innerHTML >
+          rowB.cells[columnIndex].innerHTML ? -1 : 1))));
         columnName.dataset.sortRow = 'desc';
       }
     } else {
       if (columnName === nameAndSurnameSelect[1]) {
         console.log('target: ', columnName);
-        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[1].innerHTML >
-          rowB.cells[1].innerHTML ? 1 : -1))));
+        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[columnIndex].innerHTML >
+          rowB.cells[columnIndex].innerHTML ? 1 : -1))));
         columnName.dataset.sortRow = 'abs';
       }
       if (columnName === nameAndSurnameSelect[2]) {
         console.log('target: ', columnName);
-        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[2].innerHTML >
-          rowB.cells[2].innerHTML ? 1 : -1))));
+        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[columnIndex].innerHTML >
+          rowB.cells[columnIndex].innerHTML ? 1 : -1))));
         columnName.dataset.sortRow = 'abs';
       }
     }
@@ -291,8 +309,12 @@ const data = [
 
     list.addEventListener('click', e => {
       const target = e.target;
+      const phone = target.closest('.contact');
+      console.log('phone: ', phone);
+      console.log(target.closest('.contact').children[3].textContent);
       if (target.closest('.del-icon')) {
-        target.closest('.contact').remove();
+        removeStorageContact(phone.querySelector('a').textContent);
+        phone.remove();
       }
     });
   };
@@ -306,8 +328,8 @@ const data = [
       e.preventDefault();
       const formData = new FormData(e.target);
       const newContact = Object.fromEntries(formData);
+      setStorageContact(newContact, getStorageContacts('contacts'));
       addContactPage(newContact, list);
-      addContact(newContact);
       form.reset();
       closeModal();
     });
@@ -323,7 +345,7 @@ const data = [
       btnDel,
       form,
     } = renderPhoneBook(app, title);
-    const allRow = renderContacts(list, data);
+    const allRow = renderContacts(list, getStorageContacts('contacts'));
     const { closeModal } = modalControl(btnAdd, formOverlay);
 
     hoverRow(allRow, logo);
