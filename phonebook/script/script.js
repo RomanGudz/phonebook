@@ -229,33 +229,15 @@ const data = [
     const nameAndSurnameSelect = app.querySelectorAll('th');
     console.log('nameAndSurnameSelect: ', typeof columnName.textContent);
     const rows = Array.from(list.querySelectorAll('tr'));
-    if (columnName.dataset.sortRow === 'abs') {
-      if (columnName === nameAndSurnameSelect[1]) {
-        console.log('target: ', columnName);
-        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[1].innerHTML >
-          rowB.cells[1].innerHTML ? -1 : 1))));
-        columnName.dataset.sortRow = 'desc';
-      }
-      if (columnName === nameAndSurnameSelect[2]) {
-        console.log('target: ', columnName);
-        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[2].innerHTML >
-          rowB.cells[2].innerHTML ? -1 : 1))));
-        columnName.dataset.sortRow = 'desc';
-      }
-    } else {
-      if (columnName === nameAndSurnameSelect[1]) {
-        console.log('target: ', columnName);
-        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[1].innerHTML >
-          rowB.cells[1].innerHTML ? 1 : -1))));
-        columnName.dataset.sortRow = 'abs';
-      }
-      if (columnName === nameAndSurnameSelect[2]) {
-        console.log('target: ', columnName);
-        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[2].innerHTML >
-          rowB.cells[2].innerHTML ? 1 : -1))));
-        columnName.dataset.sortRow = 'abs';
-      }
-    }
+    const columnIndex = Array.from(nameAndSurnameSelect).indexOf(columnName);
+    const sortOrder = columnName.dataset.sortRow === 'abs' ? 1 : -1;
+    console.log('sortOrder: ', sortOrder);
+    list.append(...(rows.sort((rowA, rowB) => {
+      const valueA = rowA.cells[columnIndex].innerHTML;
+      const valueB = rowB.cells[columnIndex].innerHTML;
+      return sortOrder * (valueA > valueB ? 1 : -1);
+    })));
+    columnName.dataset.sortRow = (sortOrder === 1) ? 'desc' : 'abs';
   };
 
   const init = (selectorApp, title) => {
