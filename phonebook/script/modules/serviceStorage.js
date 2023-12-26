@@ -37,4 +37,4 @@ export default {
   setStorageContact,
   removeStorageContact,
   sortTableStorage,
-}
+};

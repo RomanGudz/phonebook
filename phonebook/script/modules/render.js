@@ -1,5 +1,6 @@
-import { getStorageContacts } from './serviceStorage.js';
-import {
+import localStorage from './serviceStorage.js';
+import createElement from './createElements.js';
+const {
   createHeader,
   createLogo,
   createMain,
@@ -8,7 +9,7 @@ import {
   createForm,
   createFooter,
   createRow,
-} from './createElements.js';
+} = createElement;
 
 export const renderPhoneBook = (app, title) => {
   const header = createHeader();
@@ -45,7 +46,7 @@ export const renderPhoneBook = (app, title) => {
 };
 
 export const renderContacts = (elem) => {
-  const allRow = getStorageContacts('contacts').map(createRow);
+  const allRow = localStorage.getStorageContacts('contacts').map(createRow);
   elem.append(...allRow);
   return allRow;
 };

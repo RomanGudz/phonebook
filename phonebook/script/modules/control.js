@@ -1,11 +1,11 @@
-import {
+import localtorage from './serviceStorage.js';
+import { createRow as createElemntRow } from './createElements.js';
+const {
   getStorageContacts,
   setStorageContact,
   removeStorageContact,
   sortTableStorage,
-} from './serviceStorage.js';
-import { createRow as createElemntRow } from './createElements.js';
-
+} = localtorage;
 const hoverRow = (allRow, logo) => {
   const text = logo.textContent;
   allRow.forEach(contact => {
@@ -94,4 +94,4 @@ export default {
   modalControl,
   deleteControl,
   formControl,
-}
+};

@@ -124,7 +124,7 @@ const createFooter = (title) => {
   return footer;
 };
 
-const createRow = ({ name, surname, phone }) => {
+export const createRow = ({ name, surname, phone }) => {
   const tr = document.createElement('tr');
   tr.classList.add('contact');
   const tdDel = document.createElement('td');

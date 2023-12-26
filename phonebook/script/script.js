@@ -1,4 +1,4 @@
-import { getStorageContacts } from './modules/serviceStorage.js';
+import localStorage from './modules/serviceStorage.js';
 import * as render from './modules/render.js';
 import control from './modules/control.js';
 const {
@@ -20,7 +20,8 @@ const {
       btnDel,
       form,
     } = render.renderPhoneBook(app, title);
-    const allRow = render.renderContacts(list, getStorageContacts('contacts'));
+    const allRow = render.renderContacts(list,
+      localStorage.getStorageContacts('contacts'));
     const { closeModal } = modalControl(btnAdd, formOverlay);
 
     hoverRow(allRow, logo);
