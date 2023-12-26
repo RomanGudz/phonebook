@@ -1,27 +1,5 @@
 'use strict';
 
-// const data = [
-//   {
-//     name: 'Иван',
-//     surname: 'Петров',
-//     phone: '+79514545454',
-//   },
-//   {
-//     name: 'Игорь',
-//     surname: 'Семёнов',
-//     phone: '+79999999999',
-//   },
-//   {
-//     name: 'Семён',
-//     surname: 'Иванов',
-//     phone: '+79800252525',
-//   },
-//   {
-//     name: 'Мария',
-//     surname: 'Попова',
-//     phone: '+79876543210',
-//   },
-// ];
 {
   const getStorageContacts = (contacts) => {
     const data = localStorage.getItem(contacts);
@@ -31,7 +9,7 @@
       return JSON.parse(data);
     }
   };
-  const setStorageContact = (obj = null, data) => {
+  const setStorageContact = (obj, data) => {
     data.push(obj);
     localStorage.setItem('contacts', JSON.stringify(data));
   };
@@ -39,6 +17,21 @@
   const removeStorageContact = (phone) => {
     let data = getStorageContacts('contacts');
     data = data.filter(item => item.phone !== phone);
+    localStorage.setItem('contacts', JSON.stringify(data));
+  };
+
+  const sortTableStorage = (table) => {
+    const array = Array.from(table.querySelectorAll('tr'));
+    const data = [];
+    array.forEach((elem) => {
+      const el = elem.querySelectorAll('td');
+      const newObj = {
+        name: el[1].textContent,
+        surname: el[2].textContent,
+        phone: el[3].textContent,
+      };
+      return data.push(newObj);
+    });
     localStorage.setItem('contacts', JSON.stringify(data));
   };
 
@@ -246,37 +239,16 @@
 
   const sortTable = (columnName, list, app) => {
     const nameAndSurnameSelect = app.querySelectorAll('th');
-    console.log('nameAndSurnameSelect: ', typeof columnName.textContent);
     const rows = Array.from(list.querySelectorAll('tr'));
     const columnIndex = Array.from(nameAndSurnameSelect).indexOf(columnName);
-
-    if (columnName.dataset.sortRow === 'abs') {
-      if (columnName === nameAndSurnameSelect[1]) {
-        console.log('target: ', columnName);
-        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[columnIndex].innerHTML >
-          rowB.cells[columnIndex].innerHTML ? -1 : 1))));
-        columnName.dataset.sortRow = 'desc';
-      }
-      if (columnName === nameAndSurnameSelect[2]) {
-        console.log('target: ', columnName);
-        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[columnIndex].innerHTML >
-          rowB.cells[columnIndex].innerHTML ? -1 : 1))));
-        columnName.dataset.sortRow = 'desc';
-      }
-    } else {
-      if (columnName === nameAndSurnameSelect[1]) {
-        console.log('target: ', columnName);
-        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[columnIndex].innerHTML >
-          rowB.cells[columnIndex].innerHTML ? 1 : -1))));
-        columnName.dataset.sortRow = 'abs';
-      }
-      if (columnName === nameAndSurnameSelect[2]) {
-        console.log('target: ', columnName);
-        list.append(...(rows.sort((rowA, rowB) => (rowA.cells[columnIndex].innerHTML >
-          rowB.cells[columnIndex].innerHTML ? 1 : -1))));
-        columnName.dataset.sortRow = 'abs';
-      }
-    }
+    const sortOrder = columnName.dataset.sortRow === 'abs' ? 1 : -1;
+    list.append(...(rows.sort((rowA, rowB) => {
+      const valueA = rowA.cells[columnIndex].innerHTML;
+      const valueB = rowB.cells[columnIndex].innerHTML;
+      return sortOrder * (valueA > valueB ? 1 : -1);
+    })));
+    sortTableStorage(list);
+    columnName.dataset.sortRow = (sortOrder === 1) ? 'desc' : 'abs';
   };
 
   const modalControl = (btnAdd, formOverlay) => {
