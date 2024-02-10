@@ -1,5 +1,5 @@
-import localStorage from './serviceStorage.js';
-import createElement from './createElements.js';
+import localStorage from './serviceStorage';
+import createElement from './createElements';
 const {
   createHeader,
   createLogo,
@@ -9,10 +9,12 @@ const {
   createForm,
   createFooter,
   createRow,
+  createImgLogo,
 } = createElement;
 
 export const renderPhoneBook = (app, title) => {
   const header = createHeader();
+  const imgLogo = createImgLogo();
   const logo = createLogo(title);
   const main = createMain();
   const buttonGroup = createButtonsGroup([
@@ -30,7 +32,7 @@ export const renderPhoneBook = (app, title) => {
   const table = createTable();
   const { form, overlay } = createForm();
   const footer = createFooter(title);
-  header.headerContainer.append(logo);
+  header.headerContainer.append(imgLogo, logo);
   main.mainContainer.append(buttonGroup.btnWrapper,
     table, overlay, footer);
   app.append(header, main);

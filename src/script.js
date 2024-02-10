@@ -1,6 +1,8 @@
-import localStorage from './modules/serviceStorage.js';
-import * as render from './modules/render.js';
-import control from './modules/control.js';
+import localStorage from './script/modules/serviceStorage.js';
+import * as render from './script/modules/render.js';
+import control from './script/modules/control.js';
+import './scss/index.scss';
+
 const {
   hoverRow,
   sortTable,

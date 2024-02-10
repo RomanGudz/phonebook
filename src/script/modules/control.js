@@ -1,5 +1,5 @@
-import localtorage from './serviceStorage.js';
-import { createRow as createElemntRow } from './createElements.js';
+import localtorage from './serviceStorage';
+import { createRow as createElemntRow } from './createElements';
 const {
   getStorageContacts,
   setStorageContact,
